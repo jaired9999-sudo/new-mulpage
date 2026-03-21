@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Velura — Premium Indian Fashion</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* ── Hero ── */
+.hero{
+  min-height:88vh;display:flex;align-items:center;
+  background:linear-gradient(135deg,#111010 0%,#1c1508 55%,#0f1208 100%);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 65% 45%,rgba(200,136,58,.15) 0%,transparent 60%),
+             radial-gradient(ellipse at 15% 75%,rgba(75,50,20,.18) 0%,transparent 50%);
+}
+.hero-inner{position:relative;z-index:1;padding:80px 0}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:12px;
+  font-size:.62rem;font-weight:600;letter-spacing:.32em;
+  text-transform:uppercase;color:var(--amber-lt);margin-bottom:24px;
+}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';display:block;width:32px;height:1px;background:currentColor;opacity:.5}
+.hero h1{
+  font-family:var(--font-display);font-size:clamp(3rem,6vw,6rem);
+  font-weight:400;color:var(--white);line-height:.95;
+  letter-spacing:.02em;margin-bottom:24px;
+}
+.hero h1 em{font-style:italic;color:var(--amber-lt)}
+.hero-sub{
+  font-size:.8rem;letter-spacing:.14em;color:rgba(255,255,255,.45);
+  text-transform:uppercase;margin-bottom:40px;max-width:400px;line-height:1.8;
+}
+.hero-cta{display:flex;gap:14px;flex-wrap:wrap}
+.hero-scroll{
+  position:absolute;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  color:rgba(255,255,255,.3);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;
+}
+.hero-scroll::after{content:'↓';font-size:.9rem;animation:bounce 2s ease-in-out infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* ── Trust Bar ── */
+.trust-bar{
+  background:var(--white);border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(4,1fr);
+}
+.trust-item{
+  display:flex;align-items:center;gap:12px;
+  padding:20px 28px;border-right:1px solid var(--border);
+}
+.trust-item:last-child{border-right:none}
+.trust-icon{font-size:1.4rem;flex-shrink:0}
+.trust-text strong{display:block;font-size:.72rem;font-weight:600;letter-spacing:.06em}
+.trust-text span{font-size:.63rem;color:var(--slate)}
+
+/* ── Categories ── */
+.cats-section{padding:72px 0}
+.cats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:36px}
+.cat-tile{
+  position:relative;aspect-ratio:3/4;overflow:hidden;cursor:pointer;
+  background:var(--ink);
+}
+.cat-tile-bg{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:5.5rem;
+  background:linear-gradient(160deg,var(--sand) 0%,var(--warm-dark) 100%);
+  transition:transform .6s var(--ease);
+}
+.cat-tile:hover .cat-tile-bg{transform:scale(1.07)}
+.cat-tile-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,.72) 0%,transparent 55%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:22px;
+}
+.cat-tile-name{
+  font-family:var(--font-display);font-size:1.5rem;font-weight:400;
+  color:var(--white);letter-spacing:.03em;margin-bottom:3px;
+}
+.cat-tile-count{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+.cat-tile-arrow{
+  margin-top:10px;font-size:.62rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--amber-lt);display:flex;align-items:center;gap:5px;
+  transition:gap .2s;
+}
+.cat-tile:hover .cat-tile-arrow{gap:10px}
+
+/* ── Products Grid ── */
+.prods-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+
+/* ── Big Banner ── */
+.big-banner{
+  background:var(--ink);
+  display:grid;grid-template-columns:1fr 1fr;
+  margin:0;overflow:hidden;
+}
+.bb-visual{
+  background:linear-gradient(145deg,#1c1508,#2a1e0a);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9rem;min-height:360px;position:relative;
+}
+.bb-visual::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(200,136,58,.1),transparent 70%);
+}
+.bb-content{
+  padding:60px 52px;display:flex;flex-direction:column;justify-content:center;
+  position:relative;
+}
+.bb-tag{font-size:.6rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--amber-lt);margin-bottom:12px}
+.bb-title{font-family:var(--font-display);font-size:2.8rem;font-weight:400;color:var(--white);line-height:1.05;margin-bottom:14px}
+.bb-title em{font-style:italic;color:var(--amber-lt)}
+.bb-desc{font-size:.73rem;color:rgba(255,255,255,.48);line-height:1.85;margin-bottom:28px;max-width:300px}
+
+/* ── Newsletter ── */
+.nl-section{
+  background:linear-gradient(135deg,#1c1508 0%,#111010 100%);
+  padding:72px 0;text-align:center;position:relative;overflow:hidden;
+}
+.nl-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(200,136,58,.08),transparent 65%);
+}
+.nl-inner{position:relative;z-index:1;max-width:500px;margin:0 auto}
+.nl-kicker{font-size:.6rem;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--amber-lt);margin-bottom:10px}
+.nl-title{font-family:var(--font-display);font-size:2.6rem;font-weight:400;color:var(--white);margin-bottom:12px}
+.nl-title em{font-style:italic;color:var(--amber-lt)}
+.nl-sub{font-size:.72rem;color:rgba(255,255,255,.42);margin-bottom:30px;line-height:1.7;letter-spacing:.04em}
+.nl-form{display:flex;gap:0;max-width:420px;margin:0 auto}
+.nl-input{
+  flex:1;padding:13px 18px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);
+  border-right:none;color:var(--white);
+  font-size:.73rem;letter-spacing:.04em;outline:none;
+  transition:border-color .2s;
+}
+.nl-input::placeholder{color:rgba(255,255,255,.3)}
+.nl-input:focus{border-color:var(--amber)}
+.nl-btn{
+  padding:13px 22px;background:var(--amber);color:var(--white);
+  font-size:.64rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+  transition:background var(--t);white-space:nowrap;
+}
+.nl-btn:hover{background:var(--amber-dim)}
+
+@media(max-width:1024px){
+  .cats-grid{grid-template-columns:repeat(2,1fr)}
+  .prods-grid{grid-template-columns:repeat(2,1fr)}
+  .trust-bar{grid-template-columns:repeat(2,1fr)}
+  .trust-item:nth-child(2){border-right:none}
+  .trust-item:nth-child(3){border-top:1px solid var(--border)}
+  .big-banner{grid-template-columns:1fr}
+  .bb-visual{min-height:240px;font-size:6rem}
+}
+@media(max-width:600px){
+  .hero h1{font-size:2.6rem}
+  .cats-grid{grid-template-columns:repeat(2,1fr)}
+  .prods-grid{grid-template-columns:repeat(2,1fr)}
+  .trust-bar{grid-template-columns:1fr}
+  .trust-item{border-right:none!important;border-bottom:1px solid var(--border)}
+  .nl-form{flex-direction:column}
+  .bb-content{padding:32px 24px}
+}
+</style>
+</head>
+<body data-page="Home">
+<div id="site-nav"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-eyebrow anim-1">New Season 2026</div>
+      <h1 class="anim-2">Wear India's<br><em>Finest</em> Stories</h1>
+      <p class="hero-sub anim-3">Curated fashion, jewellery & beauty from India's most celebrated designers and heritage artisans</p>
+      <div class="hero-cta anim-4">
+        <a href="pages/shop.html" class="btn btn-amber btn-lg">Explore Collection</a>
+        <a href="pages/sale.html" class="btn btn-outline-white btn-lg">View Sale</a>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll">Scroll</div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><div class="trust-icon">🚚</div><div class="trust-text"><strong>Free Shipping</strong><span>On orders above ₹2,000</span></div></div>
+  <div class="trust-item"><div class="trust-icon">↩</div><div class="trust-text"><strong>15-Day Returns</strong><span>Hassle-free exchanges</span></div></div>
+  <div class="trust-item"><div class="trust-icon">✓</div><div class="trust-text"><strong>100% Authentic</strong><span>Guaranteed genuine</span></div></div>
+  <div class="trust-item"><div class="trust-icon">🔒</div><div class="trust-text"><strong>Secure Payments</strong><span>256-bit SSL encrypted</span></div></div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="cats-section">
+  <div class="container">
+    <div class="sec-head u-center">
+      <div class="kicker">Discover</div>
+      <h2>Shop by <em>Category</em></h2>
+      <div class="rule" style="margin:12px auto 0"></div>
+    </div>
+    <div class="cats-grid">
+      <div class="cat-tile anim-1" onclick="location.href='pages/women.html'">
+        <div class="cat-tile-bg">👗</div>
+        <div class="cat-tile-overlay">
+          <div class="cat-tile-name">Women</div>
+          <div class="cat-tile-count">Sarees · Lehengas · Dresses</div>
+          <div class="cat-tile-arrow">Shop Now →</div>
+        </div>
+      </div>
+      <div class="cat-tile anim-2" onclick="location.href='pages/men.html'">
+        <div class="cat-tile-bg">🧥</div>
+        <div class="cat-tile-overlay">
+          <div class="cat-tile-name">Men</div>
+          <div class="cat-tile-count">Blazers · Kurtas · Trousers</div>
+          <div class="cat-tile-arrow">Shop Now →</div>
+        </div>
+      </div>
+      <div class="cat-tile anim-3" onclick="location.href='pages/accessories.html'">
+        <div class="cat-tile-bg">💎</div>
+        <div class="cat-tile-overlay">
+          <div class="cat-tile-name">Accessories</div>
+          <div class="cat-tile-count">Jewellery · Bags · Scarves</div>
+          <div class="cat-tile-arrow">Shop Now →</div>
+        </div>
+      </div>
+      <div class="cat-tile anim-4" onclick="location.href='pages/beauty.html'">
+        <div class="cat-tile-bg">🌸</div>
+        <div class="cat-tile-overlay">
+          <div class="cat-tile-name">Beauty</div>
+          <div class="cat-tile-count">Fragrance · Skincare</div>
+          <div class="cat-tile-arrow">Shop Now →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRENDING -->
+<section style="padding:0 0 72px">
+  <div class="container">
+    <div class="sec-head-row">
+      <div class="sec-head">
+        <div class="kicker">Editor's Picks</div>
+        <h2>Trending <em>Now</em></h2>
+        <div class="rule"></div>
+      </div>
+      <a href="pages/shop.html" class="btn btn-outline">View All</a>
+    </div>
+    <div class="prods-grid" id="trendingGrid"></div>
+  </div>
+</section>
+
+<!-- BIG BANNER -->
+<div class="big-banner">
+  <div class="bb-visual">🥻</div>
+  <div class="bb-content">
+    <div class="bb-tag">Festive Edit 2026</div>
+    <div class="bb-title">Dressed for<br>Every <em>Memory</em></div>
+    <p class="bb-desc">From intimate ceremonies to grand celebrations — discover bridal and occasion wear from India's most revered designers.</p>
+    <a href="pages/women.html" class="btn btn-amber" style="align-self:flex-start">Explore Women's</a>
+  </div>
+</div>
+
+<!-- NEW ARRIVALS -->
+<section style="padding:72px 0">
+  <div class="container">
+    <div class="sec-head-row">
+      <div class="sec-head">
+        <div class="kicker">Just In</div>
+        <h2>New <em>Arrivals</em></h2>
+        <div class="rule"></div>
+      </div>
+      <a href="pages/shop.html" class="btn btn-outline">View All</a>
+    </div>
+    <div class="prods-grid" id="newGrid"></div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="nl-section">
+  <div class="nl-inner">
+    <div class="nl-kicker">Join the Inner Circle</div>
+    <div class="nl-title">First to <em>Know,</em><br>First to Wear</div>
+    <p class="nl-sub">Exclusive access to new arrivals, private sales and luxury previews</p>
+    <div class="nl-form">
+      <input class="nl-input" id="nlEmail" placeholder="Your email address">
+      <button class="nl-btn" onclick="nlSub()">Subscribe</button>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+<script src="js/app.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('trendingGrid').innerHTML=
+      PRODUCTS.filter(p=>p.trending).slice(0,4).map(productCard).join('');
+    document.getElementById('newGrid').innerHTML=
+      PRODUCTS.filter(p=>p.badge==='new'||p.id>15).slice(0,4).map(productCard).join('');
+  });
+  function nlSub(){
+    const v=document.getElementById('nlEmail').value;
+    if(v&&v.includes('@')){toast('✓ Welcome to the Inner Circle!');document.getElementById('nlEmail').value=''}
+    else toast('Please enter a valid email address');
+  }
+</script>
+</body>
+</html>
