@@ -3,33 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="style.css">
-    <title>L'ELITE | The Boutique</title>
+    <title>L'ELITE | Luxury Shop</title>
 </head>
 <body>
     <nav>
-        <div class="brand-logo">L'ELITE</div>
+        <div class="brand-logo" style="font-family: serif; font-size: 1.5rem;">L'ELITE</div>
         <div class="nav-links">
             <a href="index.html">Collection</a>
-            <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+            <div class="cart-wrapper">
+                <a href="cart.html">Cart (<span class="cart-count">0</span>)</a>
+                <div id="cart-preview">
+                    <h4 style="margin-top:0; font-family:serif;">Recently Added</h4>
+                    <div id="preview-items"></div>
+                    <button class="btn" onclick="window.location.href='cart.html'" style="margin-top:15px; font-size:0.6rem;">View Full Cart</button>
+                </div>
+            </div>
         </div>
     </nav>
 
-    <section class="hero">
-        <div>
-            <h1>Timeless Elegance</h1>
-            <p>Curated Luxury for the Discerning Individual</p>
-        </div>
-    </section>
+    <header class="hero">
+        <h1>The Autumn Collection</h1>
+    </header>
 
     <div class="container">
         <div class="product-grid">
-            <div class="product-card">
-                <h3>Midnight Suede Loafers</h3>
+            <div class="card">
+                <h3>Midnight Loafers</h3>
                 <p>$450</p>
                 <button class="btn" onclick="addToCart(1)">Add to Cart</button>
             </div>
-            <div class="product-card">
-                <h3>Gold-Trimmed Pen</h3>
+            <div class="card">
+                <h3>Gold Fountain Pen</h3>
                 <p>$210</p>
                 <button class="btn" onclick="addToCart(2)">Add to Cart</button>
             </div>
