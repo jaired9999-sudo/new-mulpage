@@ -2,191 +2,144 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Shop All — Velura</title>
+<title>Product — Velura</title>
 <link rel="stylesheet" href="style.css">
 <style>
-.qf-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;background:var(--white);border-bottom:1px solid var(--border);padding:11px 48px}
-.qchip{padding:6px 14px;border:1px solid var(--border);border-radius:20px;font-size:.64rem;font-weight:500;
-       letter-spacing:.06em;cursor:pointer;transition:all .2s;background:var(--white);color:var(--ink2)}
-.qchip:hover,.qchip.on{background:var(--ink);color:var(--white);border-color:var(--ink)}
-.qchip.sale-qc.on{background:var(--red);border-color:var(--red)}
-.shop-wrap{display:grid;grid-template-columns:236px 1fr;align-items:start}
-.sb{background:var(--white);border-right:1px solid var(--border);padding:22px 18px;
-    position:sticky;top:62px;max-height:calc(100vh - 62px);overflow-y:auto}
-.sb-sec{margin-bottom:22px;border-bottom:1px solid var(--border);padding-bottom:19px}
-.sb-sec:last-of-type{border-bottom:none}
-.sb-ttl{font-size:.6rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);margin-bottom:11px}
-.sb-opt{display:flex;align-items:center;gap:8px;padding:7px 0;cursor:pointer;
-        border-bottom:1px solid rgba(0,0,0,.04);font-size:.71rem}
-.sb-opt:hover{color:var(--amber)}
-.sb-opt input[type=checkbox]{width:13px;height:13px;accent-color:var(--amber);cursor:pointer;flex-shrink:0}
-.sb-opt label{cursor:pointer;flex:1}
-.sb-opt .n{font-size:.6rem;color:var(--slate)}
-.price-r{display:flex;gap:7px;align-items:center;margin-bottom:8px}
-.price-r input{flex:1;padding:8px 9px;border:1px solid var(--border);font-size:.71rem;text-align:center;outline:none;border-radius:3px}
-.price-r input:focus{border-color:var(--amber)}
-.price-r span{color:var(--slate)}
-.sb-apply{width:100%;margin-top:5px;padding:8px;background:var(--ink);color:var(--white);
-          font-size:.61rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
-          transition:background var(--t);border:none;cursor:pointer;border-radius:3px;font-family:var(--sans)}
-.sb-apply:hover{background:var(--amber)}
-.sb-clear{width:100%;padding:7px;background:transparent;color:var(--slate);border:1px solid var(--border);
-          font-size:.61rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:6px;
-          transition:all .2s;border-radius:3px;font-family:var(--sans)}
-.sb-clear:hover{border-color:var(--ink);color:var(--ink)}
-.shop-main{padding:18px 26px}
-.shop-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;
-          padding-bottom:14px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:9px}
-.res-txt{font-size:.71rem;color:var(--slate)}.res-txt strong{color:var(--ink)}
-.s-sel{border:1px solid var(--border);padding:7px 11px;font-size:.71rem;background:var(--white);
-       outline:none;cursor:pointer;border-radius:3px;color:var(--ink)}
-.s-sel:focus{border-color:var(--amber)}
-.act-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:13px}
-.atag{display:flex;align-items:center;gap:5px;padding:3px 9px;background:var(--ink);color:var(--white);
-      font-size:.59rem;letter-spacing:.08em;border-radius:3px}
-.atag button{color:rgba(255,255,255,.55);font-size:.72rem;background:none;border:none;cursor:pointer;line-height:1}
-.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
-.no-res{grid-column:1/-1;text-align:center;padding:68px 20px}
-.no-res p{font-family:var(--serif);font-size:1.65rem;font-weight:400;color:var(--slate);margin-bottom:14px}
-.lm-row{text-align:center;padding:36px 0 14px}
-.mob-filt-btn{display:none;align-items:center;gap:5px;padding:8px 15px;border:1px solid var(--border);
-              background:var(--white);font-size:.67rem;font-weight:600;letter-spacing:.1em;border-radius:3px;cursor:pointer}
-.mob-filt-btn:hover{border-color:var(--amber);color:var(--amber)}
+.pd{display:grid;grid-template-columns:1fr 1fr;min-height:80vh;background:var(--white);align-items:start}
+.pd-gal{position:sticky;top:62px;height:calc(100vh - 62px);
+        background:linear-gradient(145deg,var(--sand) 0%,var(--warm2) 100%);
+        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.pd-em{font-size:10rem;filter:drop-shadow(0 14px 36px rgba(0,0,0,.12));transition:transform .4s var(--ease);cursor:pointer}
+.pd-em:hover{transform:scale(1.05) rotate(-2deg)}
+.pd-thumbs{display:flex;gap:7px}
+.pd-th{width:50px;height:50px;border:2px solid transparent;border-radius:3px;background:rgba(255,255,255,.7);
+       display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;transition:border-color .2s}
+.pd-th.on,.pd-th:hover{border-color:var(--amber)}
+.pd-info{padding:40px 44px;overflow-y:auto;max-height:calc(100vh - 62px)}
+.pd-brand{font-size:.6rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);margin-bottom:6px}
+.pd-name{font-family:var(--serif);font-size:2.1rem;font-weight:400;line-height:1.1;margin-bottom:11px}
+.pd-stars{display:flex;align-items:center;gap:9px;margin-bottom:16px;flex-wrap:wrap}
+.pd-stars .st{color:#e5a020;font-size:.88rem}
+.pd-stars .rv{font-size:.72rem;color:var(--slate)}
+.pd-pr{display:flex;align-items:baseline;gap:11px;margin-bottom:5px;flex-wrap:wrap}
+.pd-pr .price{font-size:1.65rem;font-weight:600}
+.pd-pr .old{font-size:.92rem;color:var(--slate);text-decoration:line-through}
+.pd-pr .db{padding:3px 9px;background:var(--green);color:var(--white);font-size:.62rem;font-weight:700;border-radius:3px}
+.pd-save{font-size:.68rem;color:var(--green);font-weight:500;margin-bottom:20px}
+.pd-div{border:none;border-top:1px solid var(--border);margin:18px 0}
+.pd-lbl{font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--slate);margin-bottom:9px}
+.sz-g{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:5px}
+.sz{padding:7px 14px;border:1px solid var(--border);border-radius:3px;font-size:.71rem;
+    letter-spacing:.04em;cursor:pointer;transition:all .15s;background:var(--white)}
+.sz:hover{border-color:var(--ink)}.sz.on{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.sg-link{font-size:.62rem;color:var(--amber);text-decoration:underline;cursor:pointer}
+.clr-r{display:flex;gap:9px;margin-bottom:20px}
+.clr{width:27px;height:27px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s;position:relative}
+.clr.on{border-color:var(--amber);transform:scale(1.15)}
+.clr.on::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--amber);opacity:.7}
+.qty-r{display:flex;align-items:center;gap:9px;margin-bottom:20px}
+.qbtn{width:33px;height:33px;border:1px solid var(--border);border-radius:3px;
+      display:flex;align-items:center;justify-content:center;font-size:1.05rem;
+      cursor:pointer;font-weight:300;transition:all .15s;background:var(--white)}
+.qbtn:hover{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.qv{font-size:.83rem;font-weight:600;min-width:24px;text-align:center}
+.pd-acts{display:flex;gap:9px;margin-bottom:16px}
+.pd-acts .btn{flex:1;padding:14px}
+.pd-wb{padding:14px 16px;border:1px solid var(--border);background:var(--white);
+       font-size:1.1rem;cursor:pointer;transition:all .2s;border-radius:3px}
+.pd-wb:hover,.pd-wb.on{border-color:var(--red);color:var(--red)}
+.pd-badges{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.pd-bi{display:flex;align-items:center;gap:4px;font-size:.63rem;color:var(--slate)}
+.pd-desc{font-size:.74rem;line-height:1.9;color:var(--slate);margin-bottom:20px}
+.acc{border-top:1px solid var(--border)}
+.acc-it{border-bottom:1px solid var(--border)}
+.acc-h{display:flex;justify-content:space-between;align-items:center;padding:12px 0;cursor:pointer;
+       font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:color .2s}
+.acc-h:hover{color:var(--amber)}.acc-h .ar{transition:transform .25s;font-size:.73rem}
+.acc-h.open .ar{transform:rotate(180deg)}
+.acc-b{display:none;padding:0 0 13px;font-size:.72rem;line-height:1.85;color:var(--slate)}
+.acc-b.open{display:block}
+.rel{padding:60px 0}
 @media(max-width:860px){
-  .shop-wrap{grid-template-columns:1fr}
-  .sb{display:none;position:static;max-height:none}.sb.mob-open{display:block}
-  .mob-filt-btn{display:flex}
-  .shop-grid{grid-template-columns:repeat(2,1fr)}
-  .shop-main{padding:13px}
-  .qf-bar{padding:9px 13px}
+  .pd{grid-template-columns:1fr}.pd-gal{position:static;height:300px}
+  .pd-info{padding:20px 18px;max-height:none}.pd-name{font-size:1.65rem}
 }
-@media(max-width:480px){.shop-grid{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body data-page="Shop">
 <div id="site-nav"></div>
-
-<div class="phero">
-  <div class="wrap"><div class="phero-in a1">
-    <div class="ptag">All Products</div>
-    <h1>The <em>Collection</em></h1>
-    <div class="bcrumb"><a href="index.html">Home</a><span class="sep">/</span><span>Shop</span></div>
-  </div></div>
+<div style="background:var(--white);border-bottom:1px solid var(--border);padding:13px 48px">
+  <div class="bcrumb" id="bc"><a href="index.html">Home</a><span class="sep">/</span><a href="shop.html">Shop</a><span class="sep">/</span><span id="bcn">Product</span></div>
 </div>
-
-<div class="qf-bar">
-  <span style="font-size:.59rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)">Quick Filter:</span>
-  <div class="qchip on" onclick="setQF('all',this)">All</div>
-  <div class="qchip" onclick="setQF('women',this)">Women</div>
-  <div class="qchip" onclick="setQF('men',this)">Men</div>
-  <div class="qchip" onclick="setQF('acc',this)">Accessories</div>
-  <div class="qchip" onclick="setQF('beauty',this)">Beauty</div>
-  <div class="qchip sale-qc" onclick="setQF('sale',this)">🔖 Sale</div>
-  <button class="mob-filt-btn" onclick="document.getElementById('sb').classList.toggle('mob-open')">⚙ Filters</button>
-</div>
-
-<div class="shop-wrap">
-  <aside class="sb" id="sb">
-    <div class="sb-sec">
-      <div class="sb-ttl">Category</div>
-      <div class="sb-opt"><input type="checkbox" id="ca" checked onchange="render()"><label for="ca">All</label></div>
-      <div class="sb-opt"><input type="checkbox" id="cw" onchange="render()"><label for="cw">Women</label><span class="n">(8)</span></div>
-      <div class="sb-opt"><input type="checkbox" id="cm" onchange="render()"><label for="cm">Men</label><span class="n">(5)</span></div>
-      <div class="sb-opt"><input type="checkbox" id="cacc" onchange="render()"><label for="cacc">Accessories</label><span class="n">(4)</span></div>
-      <div class="sb-opt"><input type="checkbox" id="cb" onchange="render()"><label for="cb">Beauty</label><span class="n">(3)</span></div>
-    </div>
-    <div class="sb-sec">
-      <div class="sb-ttl">Price Range</div>
-      <div class="price-r">
-        <input id="pmin" placeholder="₹0" type="number" min="0">
-        <span>–</span>
-        <input id="pmax" placeholder="₹20000" type="number" min="0">
-      </div>
-      <button class="sb-apply" onclick="render()">Apply Price</button>
-    </div>
-    <div class="sb-sec">
-      <div class="sb-ttl">Discount</div>
-      <div class="sb-opt"><input type="checkbox" id="d10" onchange="render()"><label for="d10">10% or more</label></div>
-      <div class="sb-opt"><input type="checkbox" id="d20" onchange="render()"><label for="d20">20% or more</label></div>
-      <div class="sb-opt"><input type="checkbox" id="d30" onchange="render()"><label for="d30">30% or more</label></div>
-    </div>
-    <div class="sb-sec">
-      <div class="sb-ttl">Rating</div>
-      <div class="sb-opt"><input type="checkbox" id="r4" onchange="render()"><label for="r4">4★ &amp; above</label></div>
-      <div class="sb-opt"><input type="checkbox" id="r45" onchange="render()"><label for="r45">4.5★ &amp; above</label></div>
-    </div>
-    <button class="sb-clear" onclick="clearAll()">Clear All Filters</button>
-  </aside>
-  <main class="shop-main">
-    <div class="shop-top">
-      <div class="res-txt">Showing <strong id="rc">0</strong> of <strong id="rt">0</strong> products</div>
-      <div style="display:flex;align-items:center;gap:7px">
-        <span style="font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--slate)">Sort:</span>
-        <select class="s-sel" id="srt" onchange="render()">
-          <option value="">Featured</option>
-          <option value="pa">Price: Low → High</option>
-          <option value="pd">Price: High → Low</option>
-          <option value="rat">Top Rated</option>
-          <option value="dis">Best Discount</option>
-          <option value="nw">Newest</option>
-        </select>
-      </div>
-    </div>
-    <div class="act-tags" id="actTags"></div>
-    <div class="shop-grid" id="shopG"></div>
-    <div class="lm-row"><button class="btn btn-out" id="lmBtn" onclick="loadMore()">Load More</button></div>
-  </main>
-</div>
-
+<div class="pd" id="pdWrap"><div style="display:flex;align-items:center;justify-content:center;min-height:400px;color:var(--slate)">Loading…</div></div>
+<section class="rel"><div class="wrap">
+  <div class="sh"><div class="kick">You May Also Like</div><h2>Related <em>Products</em></h2><div class="rule"></div></div>
+  <div class="pgrid" id="relG"></div>
+</div></section>
 <div id="site-footer"></div>
 <script src="app.js"></script>
 <script>
-let qf='all',shown=9;
-const params=new URLSearchParams(location.search);
-if(params.get('cat')){qf=params.get('cat');document.querySelectorAll('.qchip').forEach(c=>{c.classList.toggle('on',c.dataset.qf===qf||(!c.dataset.qf&&qf==='all'))})}
-const sq=params.get('q')||'';
-function setQF(v,el){qf=v;shown=9;document.querySelectorAll('.qchip').forEach(c=>c.classList.remove('on'));el.classList.add('on');render()}
-function getFilt(){
-  const pmin=parseInt(document.getElementById('pmin')?.value)||0;
-  const pmax=parseInt(document.getElementById('pmax')?.value)||Infinity;
-  const r4=document.getElementById('r4')?.checked,r45=document.getElementById('r45')?.checked;
-  const d10=document.getElementById('d10')?.checked,d20=document.getElementById('d20')?.checked,d30=document.getElementById('d30')?.checked;
-  let list=[...PRODUCTS];
-  if(qf==='sale')list=list.filter(p=>!!p.old);
-  else if(qf!=='all')list=list.filter(p=>p.cat===qf);
-  if(sq)list=list.filter(p=>p.name.toLowerCase().includes(sq.toLowerCase())||p.brand.toLowerCase().includes(sq.toLowerCase()));
-  list=list.filter(p=>p.price>=pmin&&p.price<=pmax);
-  if(r45)list=list.filter(p=>p.rating>=4.5);else if(r4)list=list.filter(p=>p.rating>=4);
-  if(d30)list=list.filter(p=>p.old&&pct(p.price,p.old)>=30);
-  else if(d20)list=list.filter(p=>p.old&&pct(p.price,p.old)>=20);
-  else if(d10)list=list.filter(p=>p.old&&pct(p.price,p.old)>=10);
-  const s=document.getElementById('srt')?.value||'';
-  if(s==='pa')list.sort((a,b)=>a.price-b.price);
-  else if(s==='pd')list.sort((a,b)=>b.price-a.price);
-  else if(s==='rat')list.sort((a,b)=>b.rating-a.rating);
-  else if(s==='dis')list.sort((a,b)=>(b.old?pct(b.price,b.old):0)-(a.old?pct(a.price,a.old):0));
-  else if(s==='nw')list.sort((a,b)=>b.id-a.id);
-  return list;
-}
+const pid=parseInt(new URLSearchParams(location.search).get('id'));
+let p=PRODUCTS.find(x=>x.id===pid)||PRODUCTS[0];
+let ss=p.sizes[0],sc=0,qty=1;
 function render(){
-  const list=getFilt();const disp=list.slice(0,shown);
-  document.getElementById('rc').textContent=disp.length;
-  document.getElementById('rt').textContent=list.length;
-  document.getElementById('lmBtn').style.display=shown>=list.length?'none':'inline-flex';
-  const g=document.getElementById('shopG');
-  if(!list.length){g.innerHTML=`<div class="no-res"><p>No products found</p><button class="btn btn-amber" onclick="clearAll()">Clear Filters</button></div>`;return}
-  g.innerHTML=disp.map(pCard).join('');
+  document.title=p.name+' — Velura';
+  document.getElementById('bcn').textContent=p.name;
+  const d=pct(p.price,p.old);const w=isWished(p.id);
+  document.getElementById('pdWrap').innerHTML=`
+    <div class="pd-gal">
+      <div class="pd-em">${p.emoji}</div>
+      <div class="pd-thumbs">${['🔍','💫','📦'].map((e,i)=>`<div class="pd-th${i===0?' on':''}">${e}</div>`).join('')}</div>
+    </div>
+    <div class="pd-info a1">
+      <div class="pd-brand">${p.brand}</div>
+      <h1 class="pd-name">${p.name}</h1>
+      <div class="pd-stars"><span class="st">${starStr(p.rating)}</span><span>${p.rating}</span><span class="rv">${p.rev} reviews</span></div>
+      <div class="pd-pr">
+        <span class="price">${inr(p.price)}</span>
+        ${p.old?`<span class="old">${inr(p.old)}</span><span class="db">${d}% OFF</span>`:''}
+      </div>
+      ${p.old?`<div class="pd-save">✓ You save ${inr(p.old-p.price)}</div>`:''}
+      <hr class="pd-div">
+      <div class="pd-lbl">Select Size <span class="sg-link">Size Guide</span></div>
+      <div class="sz-g" id="szG">${p.sizes.map(s=>`<button class="sz${s===ss?' on':''}" onclick="pickSz('${s}')">${s}</button>`).join('')}</div>
+      <hr class="pd-div">
+      <div class="pd-lbl">Colour</div>
+      <div class="clr-r" id="clrR">${p.colors.map((c,i)=>`<button class="clr${i===sc?' on':''}" style="background:${c}" onclick="pickClr(${i})" title="${c}"></button>`).join('')}</div>
+      <div class="pd-lbl">Quantity</div>
+      <div class="qty-r"><button class="qbtn" onclick="chQ(-1)">−</button><span class="qv" id="qv">1</span><button class="qbtn" onclick="chQ(1)">+</button></div>
+      <div class="pd-acts">
+        <button class="btn btn-amber" onclick="doAdd()">Add to Cart</button>
+        <button class="pd-wb${w?' on':''}" id="wb" onclick="doW()">${w?'♥':'♡'}</button>
+      </div>
+      <a href="cart.html" class="btn btn-dark btn-full" onclick="doAdd()" style="margin-bottom:16px">Buy Now</a>
+      <div class="pd-badges">
+        <div class="pd-bi">🚚 Free delivery above ₹2,000</div>
+        <div class="pd-bi">↩ 15-day returns</div>
+        <div class="pd-bi">✓ 100% authentic</div>
+        <div class="pd-bi">🔒 Secure payment</div>
+      </div>
+      <hr class="pd-div">
+      <p class="pd-desc">${p.desc}</p>
+      <div class="acc">
+        ${[['Product Details','Premium quality materials. Quality-checked before dispatch.'],
+           ['Size & Fit','Follows standard Indian sizing. For best fit refer to our size guide.'],
+           ['Shipping','Free above ₹2,000. Standard: 5–7 days. Express: 2–3 days.'],
+           ['Returns','15-day easy returns. Item must be unused with tags. Refund in 5–7 days.'],
+          ].map(([t,b])=>`<div class="acc-it"><div class="acc-h" onclick="tog(this)">${t}<span class="ar">▾</span></div><div class="acc-b">${b}</div></div>`).join('')}
+      </div>
+    </div>`;
 }
-function loadMore(){shown+=9;render()}
-function clearAll(){
-  qf='all';shown=9;
-  document.getElementById('pmin').value='';document.getElementById('pmax').value='';
-  ['ca','cw','cm','cacc','cb','r4','r45','d10','d20','d30'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=id==='ca'});
-  document.getElementById('srt').value='';
-  document.querySelectorAll('.qchip').forEach((c,i)=>c.classList.toggle('on',i===0));
-  render();
-}
+function pickSz(s){ss=s;document.querySelectorAll('.sz').forEach(b=>b.classList.toggle('on',b.textContent===s))}
+function pickClr(i){sc=i;document.querySelectorAll('.clr').forEach((b,j)=>b.classList.toggle('on',j===i))}
+function chQ(d){qty=Math.max(1,qty+d);document.getElementById('qv').textContent=qty}
+function doAdd(){addToCart(p.id,ss,p.colors[sc],qty)}
+function doW(){const on=toggleWish(p.id);const b=document.getElementById('wb');b.textContent=on?'♥':'♡';b.classList.toggle('on',on);showToast(on?'♥ Saved to Wishlist':'Removed')}
+function tog(h){const b=h.nextElementSibling;const o=b.classList.contains('open');document.querySelectorAll('.acc-b').forEach(x=>x.classList.remove('open'));document.querySelectorAll('.acc-h').forEach(x=>x.classList.remove('open'));if(!o){b.classList.add('open');h.classList.add('open')}}
 render();
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('relG').innerHTML=PRODUCTS.filter(x=>x.cat===p.cat&&x.id!==p.id).slice(0,4).map(pCard).join('');
+});
 </script>
 </body>
 </html>
