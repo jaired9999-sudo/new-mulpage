@@ -2,31 +2,22 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="style.css">
-    <title>Your Collection | L'ELITE</title>
+    <title>Your Cart | L'ELITE</title>
 </head>
 <body>
     <nav>
         <div class="brand-logo">L'ELITE</div>
-        <div class="nav-links">
-            <a href="index.html">Back to Shop</a>
-            <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
-        </div>
+        <div class="nav-links"><a href="index.html">Back to Shop</a></div>
     </nav>
 
     <div class="container" style="max-width: 600px;">
-        <h2 style="text-align: center;">Your Selection</h2>
-        
-        <div id="cart-items" style="margin-bottom: 30px;"></div>
-
-        <div style="text-align: right; font-weight: bold; font-size: 1.2rem;">
+        <h2 style="text-align:center; font-family:serif;">Your Selection</h2>
+        <div id="full-cart-items"></div>
+        <div style="text-align:right; margin-top:20px; font-weight:bold; font-size:1.2rem;">
             Total: $<span id="cart-total">0</span>
         </div>
-
-        <button class="btn" onclick="beginCheckout()" style="width: 100%; margin-top: 20px;">
-            Proceed to Checkout
-        </button>
+        <button class="btn" style="margin-top:30px;" onclick="window.location.href='checkout.html'">Begin Checkout</button>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
