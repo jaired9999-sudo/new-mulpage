@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product — LUXE</title>
+  <link rel="stylesheet" href="shared.css"/>
+  <style>
+    .product-detail { padding: 48px; }
+    .detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; }
+
+    .gallery { display:flex; flex-direction:column; gap:12px; }
+    .detail-img-main {
+      height:500px; background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); display:flex; align-items:center;
+      justify-content:center; font-size:120px; transition:var(--transition);
+      overflow:hidden; position:relative;
+    }
+    .detail-img-main .zoom-hint { position:absolute; bottom:12px; right:12px; font-size:11px; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+    .detail-thumbnails { display:flex; gap:10px; }
+    .detail-thumb {
+      width:72px; height:72px; background:var(--card); border:1px solid var(--border);
+      border-radius:var(--radius); display:flex; align-items:center;
+      justify-content:center; font-size:24px; cursor:pointer; transition:var(--transition);
+    }
+    .detail-thumb:hover, .detail-thumb.active { border-color:var(--accent); }
+
+    .detail-info .detail-category { font-size:11px; letter-spacing:3px; color:var(--accent); text-transform:uppercase; margin-bottom:12px; }
+    .detail-title { font-family:var(--font-display); font-size:48px; font-weight:300; line-height:1.1; margin-bottom:16px; }
+    .detail-rating { display:flex; align-items:center; gap:10px; margin-bottom:24px; }
+    .detail-rating-text { font-size:13px; color:var(--muted); }
+    .detail-price { font-size:36px; font-weight:500; color:var(--accent); margin-bottom:8px; display:flex; align-items:baseline; gap:14px; }
+    .detail-price .old { font-size:20px; color:var(--muted); text-decoration:line-through; }
+    .savings-tag { display:inline-block; background:rgba(224,92,92,0.15); color:var(--danger); font-size:12px; padding:3px 10px; border-radius:2px; margin-bottom:24px; }
+    .detail-desc { color:var(--muted); line-height:1.9; margin-bottom:32px; font-size:14px; }
+
+    .options-label { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:12px; }
+    .options-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
+    .option-chip { padding:8px 20px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px; cursor:pointer; transition:var(--transition); background:var(--surface); color:var(--text); font-family:var(--font-body); }
+    .option-chip:hover, .option-chip.active { border-color:var(--accent); color:var(--accent); }
+
+    .qty-row { display:flex; align-items:center; gap:16px; margin-bottom:32px; }
+    .qty-ctrl { display:flex; align-items:center; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .qty-btn { background:var(--surface); border:none; color:var(--text); width:40px; height:42px; font-size:18px; cursor:pointer; transition:var(--transition); font-family:var(--font-body); }
+    .qty-btn:hover { background:var(--accent); color:#000; }
+    .qty-val { width:52px; height:42px; background:var(--card); border:none; border-left:1px solid var(--border); border-right:1px solid var(--border); color:var(--text); font-family:var(--font-body); font-size:15px; text-align:center; outline:none; }
+    .stock-status { font-size:13px; color:var(--success); display:flex; align-items:center; gap:6px; }
+
+    .detail-actions { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:28px; }
+    .wishlist-btn { background:none; border:1px solid var(--border); padding:12px 20px; border-radius:var(--radius); cursor:pointer; font-size:18px; transition:var(--transition); color:var(--muted); }
+    .wishlist-btn:hover { border-color:var(--danger); color:var(--danger); }
+    .wishlist-btn.wishlisted { border-color:var(--danger); color:var(--danger); background:rgba(224,92,92,0.08); }
+
+    .trust-row { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:32px; }
+    .trust-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--muted); }
+
+    .detail-meta { margin-top:32px; border-top:1px solid var(--border); padding-top:32px; }
+    .meta-tabs { display:flex; gap:0; border-bottom:1px solid var(--border); margin-bottom:24px; }
+    .meta-tab { padding:12px 24px; font-size:12px; letter-spacing:2px; text-transform:uppercase; cursor:pointer; color:var(--muted); border-bottom:2px solid transparent; transition:var(--transition); background:none; border-top:none; border-left:none; border-right:none; font-family:var(--font-body); }
+    .meta-tab.active { color:var(--accent); border-bottom-color:var(--accent); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+    .detail-meta-row { display:flex; gap:12px; font-size:13px; padding:10px 0; border-bottom:1px solid var(--border); }
+    .detail-meta-label { color:var(--muted); min-width:140px; }
+
+    .related-section { padding:80px 48px 48px; border-top:1px solid var(--border); }
+
+    /* BUY NOW MODAL */
+    .modal-overlay { display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.85); backdrop-filter:blur(10px); align-items:center; justify-content:center; padding:20px; }
+    .modal-overlay.open { display:flex; }
+    .modal { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); width:100%; max-width:600px; max-height:90vh; overflow-y:auto; animation:slideUp 0.35s cubic-bezier(0.4,0,0.2,1); }
+    @keyframes slideUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    .modal-header { display:flex; align-items:center; justify-content:space-between; padding:24px 28px; border-bottom:1px solid var(--border); }
+    .modal-header h2 { font-family:var(--font-display); font-size:26px; font-weight:300; }
+    .modal-close { background:none; border:1px solid var(--border); color:var(--muted); width:36px; height:36px; border-radius:var(--radius); cursor:pointer; font-size:18px; transition:var(--transition); display:flex; align-items:center; justify-content:center; }
+    .modal-close:hover { border-color:var(--danger); color:var(--danger); }
+    .modal-body { padding:28px; }
+    .modal-product-row { display:flex; gap:16px; align-items:center; padding:16px; background:var(--surface); border-radius:var(--radius); margin-bottom:24px; }
+    .modal-product-emoji { font-size:40px; width:64px; height:64px; background:var(--card); border-radius:var(--radius); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .modal-product-name { font-family:var(--font-display); font-size:20px; margin-bottom:4px; }
+    .modal-product-price { color:var(--accent); font-weight:600; font-size:18px; }
+    .modal-section-title { font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; margin-top:18px; }
+    .modal-chips { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:4px; }
+    .modal-chip { padding:7px 16px; border:1px solid var(--border); border-radius:var(--radius); font-size:13px; cursor:pointer; transition:var(--transition); background:var(--surface); color:var(--text); font-family:var(--font-body); }
+    .modal-chip:hover,.modal-chip.active { border-color:var(--accent); color:var(--accent); }
+    .modal-qty-row { display:flex; align-items:center; gap:12px; margin:18px 0; }
+    .modal-qty-ctrl { display:flex; align-items:center; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; }
+    .modal-qty-btn { background:var(--surface); border:none; color:var(--text); width:38px; height:38px; font-size:16px; cursor:pointer; transition:var(--transition); font-family:var(--font-body); }
+    .modal-qty-btn:hover { background:var(--accent); color:#000; }
+    .modal-qty-val { width:46px; height:38px; background:var(--card); border:none; border-left:1px solid var(--border); border-right:1px solid var(--border); text-align:center; font-size:14px; color:var(--text); font-family:var(--font-body); outline:none; }
+    .modal-total-row { display:flex; justify-content:space-between; align-items:center; padding:16px; background:rgba(201,169,110,0.06); border:1px solid rgba(201,169,110,0.2); border-radius:var(--radius); margin:20px 0; }
+    .modal-total-label { font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+    .modal-total-price { font-size:28px; font-weight:500; color:var(--accent); font-family:var(--font-display); }
+    .modal-actions { display:flex; flex-direction:column; gap:10px; }
+    .modal-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:4px; }
+    .modal-form-field { display:flex; flex-direction:column; gap:6px; }
+    .modal-form-field label { font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+    .modal-form-field input, .modal-form-field select { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:10px 12px; color:var(--text); font-family:var(--font-body); font-size:13px; outline:none; transition:var(--transition); width:100%; }
+    .modal-form-field input:focus, .modal-form-field select:focus { border-color:var(--accent); }
+    .modal-form-field input.merr { border-color:var(--danger) !important; }
+    .modal-divider { border:none; border-top:1px solid var(--border); margin:20px 0; }
+
+    @media(max-width:900px) {
+      .detail-grid { grid-template-columns:1fr; }
+      .product-detail { padding:24px; }
+      .detail-img-main { height:300px; font-size:80px; }
+      .detail-title { font-size:36px; }
+      .related-section { padding:48px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="nav-root"></div>
+
+<div class="product-detail">
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span class="sep">›</span>
+    <a href="shop.html">Shop</a>
+    <span class="sep">›</span>
+    <span id="breadName">Product</span>
+  </div>
+
+  <div class="detail-grid" id="detailGrid">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- Related Products -->
+<div class="related-section">
+  <div class="section-header">
+    <h2 class="section-title">You May Also <span>Like</span></h2>
+  </div>
+  <div class="products-grid" id="relatedGrid"></div>
+</div>
+
+<div id="footer-root"></div>
+<div class="toast" id="toast"><span id="toastMsg">Done!</span></div>
+
+<!-- BUY NOW MODAL -->
+<div class="modal-overlay" id="buyNowModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Quick Purchase</h2>
+      <button class="modal-close" onclick="closeBuyNow()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-product-row">
+        <div class="modal-product-emoji" id="mProductEmoji"></div>
+        <div>
+          <div class="modal-product-name" id="mProductName"></div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:4px" id="mProductCat"></div>
+          <div class="modal-product-price" id="mProductPrice"></div>
+        </div>
+      </div>
+
+      <div id="mSizes"></div>
+      <div id="mColors"></div>
+
+      <div class="modal-section-title">Quantity</div>
+      <div class="modal-qty-row">
+        <div class="modal-qty-ctrl">
+          <button class="modal-qty-btn" onclick="mQty(-1)">−</button>
+          <input type="number" class="modal-qty-val" id="mQty" value="1" min="1" max="10" readonly/>
+          <button class="modal-qty-btn" onclick="mQty(1)">+</button>
+        </div>
+        <span style="font-size:13px;color:var(--success)">✓ In Stock</span>
+      </div>
+
+      <div class="modal-total-row">
+        <div><div class="modal-total-label">Total Amount</div></div>
+        <div class="modal-total-price" id="mTotal">₹0</div>
+      </div>
+
+      <div class="modal-divider"></div>
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px">Quick Delivery Details</div>
+
+      <div class="modal-form-grid">
+        <div class="modal-form-field">
+          <label>Full Name *</label>
+          <input id="mName" placeholder="Arjun Sharma"/>
+        </div>
+        <div class="modal-form-field">
+          <label>Phone *</label>
+          <input id="mPhone" placeholder="+91 98765 43210" type="tel"/>
+        </div>
+        <div class="modal-form-field" style="grid-column:span 2">
+          <label>Email *</label>
+          <input id="mEmail" placeholder="arjun@example.com" type="email"/>
+        </div>
+        <div class="modal-form-field" style="grid-column:span 2">
+          <label>Delivery Address *</label>
+          <input id="mAddr" placeholder="House No., Street, Area, City"/>
+        </div>
+        <div class="modal-form-field">
+          <label>PIN Code *</label>
+          <input id="mPin" placeholder="500034" maxlength="6"/>
+        </div>
+        <div class="modal-form-field">
+          <label>State *</label>
+          <select id="mState">
+            <option value="">— Select —</option>
+            <option>Andhra Pradesh</option><option>Delhi</option><option>Goa</option>
+            <option>Gujarat</option><option>Karnataka</option><option>Kerala</option>
+            <option>Maharashtra</option><option>Rajasthan</option><option>Tamil Nadu</option>
+            <option selected>Telangana</option><option>Uttar Pradesh</option><option>West Bengal</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="modal-divider"></div>
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px">Payment</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px" id="mPayOptions">
+        <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:var(--transition)" id="mpm-card" onclick="mSelPay('card',this)">
+          <input type="radio" name="mpay" value="card" checked style="accent-color:var(--accent)"/> 💳 Credit / Debit Card
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:var(--transition)" id="mpm-upi" onclick="mSelPay('upi',this)">
+          <input type="radio" name="mpay" value="upi" style="accent-color:var(--accent)"/> 📱 UPI
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:var(--transition)" id="mpm-cod" onclick="mSelPay('cod',this)">
+          <input type="radio" name="mpay" value="cod" style="accent-color:var(--accent)"/> 💵 Cash on Delivery
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" style="width:100%;justify-content:center;padding:16px;font-size:14px" id="mPlaceBtn" onclick="mPlaceOrder()">
+          🔒 Confirm Purchase
+        </button>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="closeBuyNow()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PURCHASE SUCCESS -->
+<div class="modal-overlay" id="buySuccessModal">
+  <div class="modal" style="max-width:440px;text-align:center">
+    <div class="modal-body" style="padding:44px 36px">
+      <div style="font-size:64px;margin-bottom:16px;animation:pop 0.5s cubic-bezier(0.34,1.56,0.64,1)">🎉</div>
+      <div style="font-family:var(--font-display);font-size:36px;font-weight:300;color:var(--accent);margin-bottom:8px">Order Placed!</div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 20px;display:inline-block;margin:12px 0 20px">
+        <div style="font-size:10px;letter-spacing:3px;color:var(--muted);text-transform:uppercase">Order Number</div>
+        <div style="font-family:var(--font-display);font-size:22px;color:var(--accent);margin-top:4px" id="buyOrderId">LUXE-00001</div>
+      </div>
+      <div id="buySuccessInfo" style="text-align:left;background:var(--surface);border-radius:var(--radius);padding:16px;margin-bottom:20px;font-size:13px"></div>
+      <p style="color:var(--muted);font-size:13px;line-height:1.8;margin-bottom:24px">Your order is confirmed! We'll send updates to your email and phone. Expected delivery based on your chosen method.</p>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <a class="btn btn-primary" href="index.html">Continue Shopping</a>
+        <button class="btn btn-outline" onclick="document.getElementById('buySuccessModal').classList.remove('open')">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+  document.getElementById('nav-root').innerHTML = renderNav('shop');
+  document.getElementById('footer-root').innerHTML = renderFooter();
+
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get('id'));
+  const product = PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
+  let selectedSize = product.sizes?.[0] || null;
+  let selectedColor = product.colors?.[0] || null;
+  let wishlisted = getWishlist().includes(product.id);
+
+  document.title = `${product.name} — LUXE`;
+  document.getElementById('breadName').textContent = product.name;
+
+  function renderDetail() {
+    const savings = product.oldPrice ? Math.round((1 - product.price/product.oldPrice)*100) : 0;
+    document.getElementById('detailGrid').innerHTML = `
+      <div class="gallery">
+        <div class="detail-img-main">
+          <span>${product.emoji}</span>
+          <span class="zoom-hint">🔍 Hover to zoom</span>
+        </div>
+        <div class="detail-thumbnails">
+          ${[product.emoji,product.emoji,product.emoji].map((e,i) => `
+            <div class="detail-thumb ${i===0?'active':''}" onclick="selectThumb(this)">${e}</div>`).join('')}
+        </div>
+      </div>
+
+      <div class="detail-info">
+        <div class="detail-category">${product.category}</div>
+        <h1 class="detail-title">${product.name}</h1>
+        <div class="detail-rating">
+          <div>${renderStars(product.rating)}</div>
+          <span class="detail-rating-text">${product.rating}.0 — ${product.reviews} reviews</span>
+        </div>
+        <div class="detail-price">
+          ₹${product.price.toLocaleString('en-IN')}
+          ${product.oldPrice ? `<span class="old">₹${product.oldPrice.toLocaleString('en-IN')}</span>` : ''}
+        </div>
+        ${savings ? `<div class="savings-tag">You save ${savings}% (₹${(product.oldPrice-product.price).toLocaleString('en-IN')})</div>` : ''}
+        <p class="detail-desc">${product.desc}</p>
+
+        ${product.sizes ? `
+          <div class="options-label">Size — <span style="color:var(--text)">${selectedSize}</span></div>
+          <div class="options-row" id="sizeOptions">
+            ${product.sizes.map(s => `<button class="option-chip ${s===selectedSize?'active':''}" onclick="selectSize('${s}',this)">${s}</button>`).join('')}
+          </div>` : ''}
+
+        ${product.colors ? `
+          <div class="options-label">Color — <span style="color:var(--text)">${selectedColor}</span></div>
+          <div class="options-row" id="colorOptions">
+            ${product.colors.map(c => `<button class="option-chip ${c===selectedColor?'active':''}" onclick="selectColor('${c}',this)">${c}</button>`).join('')}
+          </div>` : ''}
+
+        <div class="qty-row">
+          <div class="qty-ctrl">
+            <button class="qty-btn" onclick="changeQty(-1)">−</button>
+            <input type="number" class="qty-val" id="qtyInput" value="1" min="1" max="10" readonly/>
+            <button class="qty-btn" onclick="changeQty(1)">+</button>
+          </div>
+          <span class="stock-status">✓ In Stock</span>
+        </div>
+
+        <div class="detail-actions">
+          <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="handleAddToCart()">Add to Cart</button>
+          <button class="btn btn-outline" style="flex:1;justify-content:center" onclick="openBuyNow()">⚡ Buy Now</button>
+          <button class="wishlist-btn ${wishlisted?'wishlisted':''}" id="wishBtn" onclick="handleWishlist()">♡</button>
+        </div>
+
+        <div class="trust-row">
+          <div class="trust-item">🚚 Free shipping over ₹1,999</div>
+          <div class="trust-item">↩️ 30-day returns</div>
+          <div class="trust-item">🔒 Secure payment</div>
+        </div>
+
+        <div class="detail-meta">
+          <div class="meta-tabs">
+            <button class="meta-tab active" onclick="showTab('specs',this)">Specifications</button>
+            <button class="meta-tab" onclick="showTab('shipping',this)">Shipping</button>
+            <button class="meta-tab" onclick="showTab('returns',this)">Returns</button>
+          </div>
+          <div class="tab-content active" id="tab-specs">
+            ${Object.entries(product.meta).map(([k,v]) => `
+              <div class="detail-meta-row">
+                <span class="detail-meta-label">${k}</span>
+                <span>${v}</span>
+              </div>`).join('')}
+          </div>
+          <div class="tab-content" id="tab-shipping">
+            <div class="detail-meta-row"><span class="detail-meta-label">Standard</span><span>Free on orders over ₹1,999 — 5–7 business days</span></div>
+            <div class="detail-meta-row"><span class="detail-meta-label">Express</span><span>₹199 — 2–3 business days</span></div>
+            <div class="detail-meta-row"><span class="detail-meta-label">Same Day</span><span>₹399 — Available in Hyderabad</span></div>
+          </div>
+          <div class="tab-content" id="tab-returns">
+            <div class="detail-meta-row"><span class="detail-meta-label">Policy</span><span>30-day returns from date of delivery</span></div>
+            <div class="detail-meta-row"><span class="detail-meta-label">Condition</span><span>Unused, original packaging</span></div>
+            <div class="detail-meta-row"><span class="detail-meta-label">Process</span><span>Initiate via Contact page or email</span></div>
+            <div class="detail-meta-row"><span class="detail-meta-label">Refund</span><span>Processed within 5–7 business days</span></div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function selectThumb(el) {
+    document.querySelectorAll('.detail-thumb').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function selectSize(s, el) {
+    selectedSize = s;
+    document.querySelectorAll('#sizeOptions .option-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelector('.options-label').innerHTML = `Size — <span style="color:var(--text)">${s}</span>`;
+  }
+  function selectColor(c, el) {
+    selectedColor = c;
+    document.querySelectorAll('#colorOptions .option-chip').forEach(x => x.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function changeQty(d) {
+    const inp = document.getElementById('qtyInput');
+    let v = parseInt(inp.value) + d;
+    inp.value = Math.max(1, Math.min(10, v));
+  }
+  function handleAddToCart() {
+    const qty = parseInt(document.getElementById('qtyInput').value);
+    addToCart(product, qty, selectedSize, selectedColor);
+  }
+  function handleWishlist() {
+    wishlisted = !wishlisted;
+    toggleWishlist(product.id);
+    const btn = document.getElementById('wishBtn');
+    btn.classList.toggle('wishlisted', wishlisted);
+    btn.textContent = wishlisted ? '♥' : '♡';
+  }
+  function showTab(id, el) {
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.meta-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-'+id).classList.add('active');
+    el.classList.add('active');
+  }
+
+  renderDetail();
+
+  // Related products
+  const related = PRODUCTS.filter(p => p.id !== product.id && p.category === product.category).slice(0,4);
+  const fallback = PRODUCTS.filter(p => p.id !== product.id).slice(0,4);
+  document.getElementById('relatedGrid').innerHTML = (related.length ? related : fallback).map(productCardHTML).join('');
+
+  /* ── BUY NOW MODAL ── */
+  let mSelSize = product.sizes?.[0] || null;
+  let mSelColor = product.colors?.[0] || null;
+  let mPayMethod = 'card';
+  let buyOrderSeed = Math.floor(Math.random()*9000)+1000;
+
+  function openBuyNow() {
+    document.getElementById('mProductEmoji').textContent = product.emoji;
+    document.getElementById('mProductName').textContent = product.name;
+    document.getElementById('mProductCat').textContent = product.category;
+    document.getElementById('mProductPrice').textContent = `₹${product.price.toLocaleString('en-IN')}`;
+
+    // Sizes
+    document.getElementById('mSizes').innerHTML = product.sizes ? `
+      <div class="modal-section-title">Size — <span style="color:var(--text)">${mSelSize}</span></div>
+      <div class="modal-chips" id="mSizeChips">
+        ${product.sizes.map(s=>`<button class="modal-chip ${s===mSelSize?'active':''}" onclick="mPickSize('${s}',this)">${s}</button>`).join('')}
+      </div>` : '';
+
+    // Colors
+    document.getElementById('mColors').innerHTML = product.colors ? `
+      <div class="modal-section-title">Color — <span style="color:var(--text)">${mSelColor}</span></div>
+      <div class="modal-chips" id="mColorChips">
+        ${product.colors.map(c=>`<button class="modal-chip ${c===mSelColor?'active':''}" onclick="mPickColor('${c}',this)">${c}</button>`).join('')}
+      </div>` : '';
+
+    document.getElementById('mQty').value = 1;
+    updateMTotal();
+    document.getElementById('buyNowModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeBuyNow() {
+    document.getElementById('buyNowModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function mPickSize(s, el) {
+    mSelSize = s;
+    document.querySelectorAll('#mSizeChips .modal-chip').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function mPickColor(c, el) {
+    mSelColor = c;
+    document.querySelectorAll('#mColorChips .modal-chip').forEach(x=>x.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function mQty(d) {
+    const inp = document.getElementById('mQty');
+    inp.value = Math.max(1, Math.min(10, parseInt(inp.value)+d));
+    updateMTotal();
+  }
+  function updateMTotal() {
+    const qty = parseInt(document.getElementById('mQty').value)||1;
+    document.getElementById('mTotal').textContent = `₹${(product.price*qty).toLocaleString('en-IN')}`;
+  }
+  function mSelPay(type, el) {
+    mPayMethod = type;
+    document.querySelectorAll('#mPayOptions label').forEach(l=>l.style.borderColor='var(--border)');
+    el.style.borderColor = 'var(--accent)';
+  }
+
+  function mPlaceOrder() {
+    const g = id => document.getElementById(id)?.value?.trim()||'';
+    const errors = [];
+    if (!g('mName')) errors.push('mName');
+    if (!/^[\+]?[\d\s\-]{10,14}$/.test(g('mPhone'))) errors.push('mPhone');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(g('mEmail'))) errors.push('mEmail');
+    if (!g('mAddr')) errors.push('mAddr');
+    if (!/^\d{6}$/.test(g('mPin'))) errors.push('mPin');
+    if (!g('mState')) errors.push('mState');
+
+    errors.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.classList.add('merr'); el.addEventListener('input',()=>el.classList.remove('merr'),{once:true}); }
+    });
+    if (errors.length) { showToast('Please fill in all required fields'); document.getElementById(errors[0]).focus(); return; }
+
+    const btn = document.getElementById('mPlaceBtn');
+    btn.disabled = true; btn.textContent = '⏳ Processing…';
+
+    setTimeout(() => {
+      const qty = parseInt(document.getElementById('mQty').value)||1;
+      const total = product.price * qty;
+      const tax = Math.round(total * 0.18);
+      const orderId = `LUXE-${String(++buyOrderSeed).padStart(5,'0')}`;
+      const payLabels = { card:'Credit / Debit Card', upi:'UPI', cod:'Cash on Delivery' };
+
+      document.getElementById('buyOrderId').textContent = orderId;
+      document.getElementById('buySuccessInfo').innerHTML = [
+        ['Customer', g('mName')],
+        ['Email', g('mEmail')],
+        ['Phone', g('mPhone')],
+        ['Product', `${product.name}${mSelSize?' — '+mSelSize:''}${mSelColor?' / '+mSelColor:''}`],
+        ['Quantity', qty],
+        ['Ship to', `${g('mAddr')}, ${g('mState')} — ${g('mPin')}`],
+        ['Payment', payLabels[mPayMethod]],
+        ['Amount', `₹${(total + tax).toLocaleString('en-IN')} (incl. GST)`],
+      ].map(([l,v])=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px"><span style="color:var(--muted)">${l}</span><span>${v}</span></div>`).join('');
+
+      document.getElementById('buyNowModal').classList.remove('open');
+      document.getElementById('buySuccessModal').classList.add('open');
+      btn.disabled = false; btn.textContent = '🔒 Confirm Purchase';
+    }, 1800);
+  }
+
+  // Close modal on backdrop click
+  document.getElementById('buyNowModal').addEventListener('click', function(e) {
+    if (e.target === this) closeBuyNow();
+  });
+</script>
+</body>
+</html>
