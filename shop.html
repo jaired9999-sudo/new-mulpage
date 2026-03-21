@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop All — Velura</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+.shop-wrap{display:grid;grid-template-columns:240px 1fr;gap:0;min-height:70vh;align-items:start}
+/* Sidebar */
+.sidebar{
+  background:var(--white);border-right:1px solid var(--border);
+  padding:24px 20px;position:sticky;top:60px;
+  max-height:calc(100vh - 60px);overflow-y:auto;
+}
+.sb-sec{margin-bottom:26px;border-bottom:1px solid var(--border);padding-bottom:22px}
+.sb-sec:last-child{border-bottom:none}
+.sb-title{
+  font-size:.62rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink);margin-bottom:12px;display:flex;justify-content:space-between;cursor:pointer;
+}
+.sb-title .toggle{color:var(--slate);font-weight:300;font-size:.8rem;transition:transform .2s}
+.sb-list{display:flex;flex-direction:column;gap:0}
+.sb-opt{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 0;cursor:pointer;border-bottom:1px solid rgba(0,0,0,.04);
+  transition:color .15s;font-size:.72rem;
+}
+.sb-opt:hover{color:var(--amber)}
+.sb-opt input[type=checkbox]{width:14px;height:14px;accent-color:var(--amber);cursor:pointer;flex-shrink:0}
+.sb-opt label{cursor:pointer;flex:1}
+.sb-opt .n{font-size:.62rem;color:var(--slate)}
+.price-wrap{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.price-wrap input{flex:1;padding:8px 10px;border:1px solid var(--border);font-size:.72rem;text-align:center;outline:none;border-radius:var(--r)}
+.price-wrap input:focus{border-color:var(--amber)}
+.price-wrap span{color:var(--slate)}
+.sb-apply{
+  width:100%;margin-top:6px;padding:8px;background:var(--ink);color:var(--white);
+  font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  transition:background var(--t);border:none;cursor:pointer;border-radius:var(--r);font-family:var(--font-body);
+}
+.sb-apply:hover{background:var(--amber)}
+.sb-clear{
+  width:100%;padding:8px;background:transparent;color:var(--slate);
+  border:1px solid var(--border);font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;margin-top:6px;transition:all .2s;border-radius:var(--r);font-family:var(--font-body);
+}
+.sb-clear:hover{border-color:var(--ink);color:var(--ink)}
+/* Main */
+.shop-main{padding:20px 28px}
+.shop-topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;flex-wrap:wrap;gap:10px;
+  padding-bottom:16px;border-bottom:1px solid var(--border);
+}
+.results-txt{font-size:.72rem;color:var(--slate)}
+.results-txt strong{color:var(--ink)}
+.sort-row{display:flex;align-items:center;gap:8px}
+.sort-row label{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--slate);font-weight:600}
+.sort-sel{border:1px solid var(--border);padding:7px 12px;font-size:.72rem;background:var(--white);outline:none;cursor:pointer;border-radius:var(--r);color:var(--ink)}
+.sort-sel:focus{border-color:var(--amber)}
+.active-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.a-tag{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 10px;background:var(--ink);color:var(--white);
+  font-size:.6rem;letter-spacing:.08em;border-radius:var(--r);
+}
+.a-tag button{color:rgba(255,255,255,.6);font-size:.75rem;background:none;border:none;cursor:pointer;line-height:1}
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+.no-res{
+  grid-column:1/-1;text-align:center;padding:72px 20px;
+}
+.no-res p{font-family:var(--font-display);font-size:1.7rem;font-weight:400;color:var(--slate);margin-bottom:16px}
+.load-more-row{text-align:center;padding:40px 0 16px}
+/* Mobile filter btn */
+.mob-filter-btn{
+  display:none;align-items:center;gap:6px;
+  padding:8px 16px;border:1px solid var(--border);background:var(--white);
+  font-size:.68rem;font-weight:600;letter-spacing:.1em;border-radius:var(--r);cursor:pointer;
+}
+.mob-filter-btn:hover{border-color:var(--amber);color:var(--amber)}
+.qf-bar{
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  background:var(--white);border-bottom:1px solid var(--border);
+  padding:12px 28px;
+}
+.qf-chip{
+  padding:6px 14px;border:1px solid var(--border);border-radius:20px;
+  font-size:.65rem;font-weight:500;letter-spacing:.06em;cursor:pointer;
+  transition:all .2s;background:var(--white);color:var(--ink-soft);
+}
+.qf-chip:hover,.qf-chip.on{background:var(--ink);color:var(--white);border-color:var(--ink)}
+.qf-chip.sale-chip.on{background:var(--danger);border-color:var(--danger)}
+@media(max-width:900px){
+  .shop-wrap{grid-template-columns:1fr}
+  .sidebar{display:none;position:static;max-height:none}
+  .sidebar.mob-open{display:block}
+  .mob-filter-btn{display:flex}
+  .shop-grid{grid-template-columns:repeat(2,1fr)}
+  .shop-main{padding:14px}
+  .qf-bar{padding:10px 14px}
+}
+@media(max-width:480px){.shop-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body data-page="Shop">
+<div id="site-nav"></div>
+
+<div class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner anim-1">
+      <div class="page-hero-tag">All Products</div>
+      <h1>The <em>Collection</em></h1>
+      <div class="breadcrumb">
+        <a href="../index.html">Home</a><span class="sep">/</span><span>Shop</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Filters -->
+<div class="qf-bar" id="qfBar">
+  <span style="font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--slate)">Filter:</span>
+  <div class="qf-chip on" data-qf="all" onclick="setQF('all',this)">All</div>
+  <div class="qf-chip" data-qf="women" onclick="setQF('women',this)">Women</div>
+  <div class="qf-chip" data-qf="men" onclick="setQF('men',this)">Men</div>
+  <div class="qf-chip" data-qf="accessories" onclick="setQF('accessories',this)">Accessories</div>
+  <div class="qf-chip" data-qf="beauty" onclick="setQF('beauty',this)">Beauty</div>
+  <div class="qf-chip sale-chip" data-qf="sale" onclick="setQF('sale',this)">🔖 Sale</div>
+  <button class="mob-filter-btn" onclick="document.getElementById('sidebar').classList.toggle('mob-open')">⚙ Filters</button>
+</div>
+
+<div class="shop-wrap">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-sec">
+      <div class="sb-title">Category</div>
+      <div class="sb-list">
+        <div class="sb-opt"><input type="checkbox" id="c-all" checked onchange="render()"><label for="c-all">All</label></div>
+        <div class="sb-opt"><input type="checkbox" id="c-women" onchange="render()"><label for="c-women">Women</label><span class="n">(8)</span></div>
+        <div class="sb-opt"><input type="checkbox" id="c-men" onchange="render()"><label for="c-men">Men</label><span class="n">(5)</span></div>
+        <div class="sb-opt"><input type="checkbox" id="c-accessories" onchange="render()"><label for="c-accessories">Accessories</label><span class="n">(4)</span></div>
+        <div class="sb-opt"><input type="checkbox" id="c-beauty" onchange="render()"><label for="c-beauty">Beauty</label><span class="n">(3)</span></div>
+      </div>
+    </div>
+    <div class="sb-sec">
+      <div class="sb-title">Price Range</div>
+      <div class="price-wrap">
+        <input id="pMin" placeholder="₹0" type="number" min="0">
+        <span>–</span>
+        <input id="pMax" placeholder="₹20000" type="number" min="0">
+      </div>
+      <button class="sb-apply" onclick="render()">Apply Price</button>
+    </div>
+    <div class="sb-sec">
+      <div class="sb-title">Discount</div>
+      <div class="sb-list">
+        <div class="sb-opt"><input type="checkbox" id="d10" onchange="render()"><label for="d10">10% or more</label></div>
+        <div class="sb-opt"><input type="checkbox" id="d20" onchange="render()"><label for="d20">20% or more</label></div>
+        <div class="sb-opt"><input type="checkbox" id="d30" onchange="render()"><label for="d30">30% or more</label></div>
+      </div>
+    </div>
+    <div class="sb-sec">
+      <div class="sb-title">Rating</div>
+      <div class="sb-list">
+        <div class="sb-opt"><input type="checkbox" id="r4" onchange="render()"><label for="r4">4★ & above</label></div>
+        <div class="sb-opt"><input type="checkbox" id="r45" onchange="render()"><label for="r45">4.5★ & above</label></div>
+      </div>
+    </div>
+    <button class="sb-clear" onclick="clearAll()">Clear All Filters</button>
+  </aside>
+
+  <!-- Main -->
+  <main class="shop-main">
+    <div class="shop-topbar">
+      <div class="results-txt">Showing <strong id="rCount">0</strong> of <strong id="rTotal">0</strong> products</div>
+      <div class="sort-row">
+        <label>Sort:</label>
+        <select class="sort-sel" id="sortSel" onchange="render()">
+          <option value="">Featured</option>
+          <option value="pa">Price: Low → High</option>
+          <option value="pd">Price: High → Low</option>
+          <option value="rat">Top Rated</option>
+          <option value="dis">Best Discount</option>
+          <option value="new">Newest</option>
+        </select>
+      </div>
+    </div>
+    <div class="active-tags" id="activeTags"></div>
+    <div class="shop-grid" id="shopGrid"></div>
+    <div class="load-more-row"><button class="btn btn-outline" id="loadMoreBtn" onclick="loadMore()">Load More Products</button></div>
+  </main>
+</div>
+
+<div id="site-footer"></div>
+<script src="../js/app.js"></script>
+<script>
+let qf='all',shown=9,pMin=0,pMax=Infinity;
+const params=new URLSearchParams(location.search);
+if(params.get('cat'))qf=params.get('cat');
+const searchQ=params.get('q')||'';
+
+function setQF(v,el){
+  qf=v;shown=9;
+  document.querySelectorAll('.qf-chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  render();
+}
+function getFiltered(){
+  const r4=document.getElementById('r4')?.checked;
+  const r45=document.getElementById('r45')?.checked;
+  const d10=document.getElementById('d10')?.checked;
+  const d20=document.getElementById('d20')?.checked;
+  const d30=document.getElementById('d30')?.checked;
+  pMin=parseInt(document.getElementById('pMin')?.value)||0;
+  pMax=parseInt(document.getElementById('pMax')?.value)||Infinity;
+  let list=[...PRODUCTS];
+  if(qf==='sale')list=list.filter(p=>!!p.old);
+  else if(qf!=='all')list=list.filter(p=>p.cat===qf);
+  if(searchQ)list=list.filter(p=>p.name.toLowerCase().includes(searchQ.toLowerCase())||p.brand.toLowerCase().includes(searchQ.toLowerCase()));
+  list=list.filter(p=>p.price>=pMin&&p.price<=pMax);
+  if(r45)list=list.filter(p=>p.rating>=4.5);
+  else if(r4)list=list.filter(p=>p.rating>=4);
+  if(d30)list=list.filter(p=>p.old&&disc(p.price,p.old)>=30);
+  else if(d20)list=list.filter(p=>p.old&&disc(p.price,p.old)>=20);
+  else if(d10)list=list.filter(p=>p.old&&disc(p.price,p.old)>=10);
+  const s=document.getElementById('sortSel')?.value||'';
+  if(s==='pa')list.sort((a,b)=>a.price-b.price);
+  else if(s==='pd')list.sort((a,b)=>b.price-a.price);
+  else if(s==='rat')list.sort((a,b)=>b.rating-a.rating);
+  else if(s==='dis')list.sort((a,b)=>(b.old?disc(b.price,b.old):0)-(a.old?disc(a.price,a.old):0));
+  else if(s==='new')list.sort((a,b)=>b.id-a.id);
+  return list;
+}
+function render(){
+  const list=getFiltered();
+  const display=list.slice(0,shown);
+  document.getElementById('rCount').textContent=display.length;
+  document.getElementById('rTotal').textContent=list.length;
+  document.getElementById('loadMoreBtn').style.display=shown>=list.length?'none':'inline-flex';
+  const grid=document.getElementById('shopGrid');
+  if(!list.length){
+    grid.innerHTML=`<div class="no-res"><p>No products found</p><button class="btn btn-amber" onclick="clearAll()">Clear Filters</button></div>`;
+    return;
+  }
+  grid.innerHTML=display.map(productCard).join('');
+}
+function loadMore(){shown+=9;render()}
+function clearAll(){
+  qf='all';shown=9;pMin=0;pMax=Infinity;
+  document.getElementById('pMin').value='';
+  document.getElementById('pMax').value='';
+  ['r4','r45','d10','d20','d30','c-all','c-women','c-men','c-accessories','c-beauty'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.checked=id==='c-all'}
+  });
+  document.getElementById('sortSel').value='';
+  document.querySelectorAll('.qf-chip').forEach((c,i)=>c.classList.toggle('on',i===0));
+  render();
+}
+if(searchQ)document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelector('.nav-search').value=searchQ;
+});
+render();
+</script>
+</body>
+</html>
