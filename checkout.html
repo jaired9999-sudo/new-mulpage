@@ -1,25 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="style.css">
-    <title>Checkout | L'ELITE</title>
-</head>
-<body>
-    <div class="container" style="max-width: 500px;">
-        <h2 style="text-align: center;">Shipping Details</h2>
-        <form onsubmit="completePurchase(event)">
-            <label>Full Name</label>
-            <input type="text" placeholder="John Doe" required>
-            
-            <label>Email Address</label>
-            <input type="email" placeholder="john@luxury.com" required>
-            
-            <label>Shipping Address</label>
-            <input type="text" placeholder="123 Luxury Lane" required>
-            
-            <button type="submit" class="btn" style="width: 100%;">Place Order & Purchase</button>
-        </form>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+<form onsubmit="localStorage.removeItem('myntra_cart'); location.href='success.html'; return false;">
+    <input type="text" placeholder="Contact Number" required>
+    <input type="text" placeholder="Address (House No, Building, Street)" required>
+    <button type="submit" class="btn-pink">Pay & Place Order</button>
+</form>
