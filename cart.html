@@ -7,15 +7,26 @@
 <body>
     <nav>
         <div class="brand-logo">L'ELITE</div>
-        <div class="nav-links"><a href="index.html">Back to Shop</a></div>
+        <div class="nav-links">
+            <a href="index.html">Back to Shop</a>
+            <a href="cart.html">Cart (<span id="cart-count">0</span>)</a>
+        </div>
     </nav>
 
-    <div class="container" style="max-width: 600px; text-align: center;">
-        <h2>Your Selection</h2>
-        <hr>
-        <p>Review your items before we proceed to checkout.</p>
-        <button class="btn" onclick="beginCheckout()">Begin Checkout</button>
+    <div class="container" style="max-width: 600px;">
+        <h2 style="text-align: center;">Your Selection</h2>
+        
+        <div id="cart-items" style="margin-bottom: 30px;"></div>
+
+        <div style="text-align: right; font-weight: bold; font-size: 1.2rem;">
+            Total: $<span id="cart-total">0</span>
+        </div>
+
+        <button class="btn" onclick="beginCheckout()" style="width: 100%; margin-top: 20px;">
+            Proceed to Checkout
+        </button>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
