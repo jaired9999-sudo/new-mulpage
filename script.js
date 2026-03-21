@@ -1,66 +1,45 @@
-// Initialize DataLayer for GTM
-window.dataLayer = window.dataLayer || [];
-
-const catalog = [
-    { id: 'LUX_01', name: 'Onyx Reserve Watch', price: 1200, category: 'Timepieces' },
-    { id: 'LUX_02', name: 'Silk Midnight Gown', price: 850, category: 'Apparel' },
-    { id: 'LUX_03', name: 'Gold Leaf Cufflinks', price: 300, category: 'Accessories' }
+// Product Data
+const products = [
+    { id: 1, name: "Midnight Suede Loafers", price: 450 },
+    { id: 2, name: "Gold-Trimmed Fountain Pen", price: 210 },
+    { id: 3, name: "Silk Monogram Scarf", price: 325 }
 ];
 
-// Add to Cart Logic
-function addToCart(id) {
-    const item = catalog.find(p => p.id === id);
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.push(item);
-    localStorage.setItem('cart', JSON.stringify(cart));
+// Initialize Cart
+let cart = JSON.parse(localStorage.getItem('luxury_cart')) || [];
 
-    // GA4 Event
-    window.dataLayer.push({
-        event: 'add_to_cart',
-        ecommerce: {
-            currency: 'USD',
-            value: item.price,
-            items: [{
-                item_id: item.id,
-                item_name: item.name,
-                price: item.price,
-                item_category: item.category,
-                quantity: 1
-            }]
-        }
-    });
-    alert('Item added to your collection.');
+// 1. Add to Cart Function
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    cart.push(product);
+    localStorage.setItem('luxury_cart', JSON.stringify(cart));
+    alert(`${product.name} has been added to your collection.`);
+    updateCartCount();
 }
 
-// Checkout Trigger
-function beginCheckout() {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    if (cart.length === 0) return alert("Your cart is empty.");
+// Update Cart Count UI
+function updateCartCount() {
+    const countElement = document.getElementById('cart-count');
+    if (countElement) {
+        countElement.innerText = cart.length;
+    }
+}
 
-    window.dataLayer.push({
-        event: 'begin_checkout',
-        ecommerce: {
-            currency: 'USD',
-            value: cart.reduce((acc, i) => acc + i.price, 0),
-            items: cart.map(i => ({ item_id: i.id, item_name: i.name, price: i.price }))
-        }
-    });
+// 2. Begin Checkout Function
+function beginCheckout() {
+    if (cart.length === 0) {
+        alert("Your collection is currently empty.");
+        return;
+    }
     window.location.href = 'checkout.html';
 }
 
-// Final Purchase Logic (Success Page)
-function finalizePurchase() {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    if(cart.length === 0) return;
-
-    window.dataLayer.push({
-        event: 'purchase',
-        ecommerce: {
-            transaction_id: 'T' + Date.now(),
-            value: cart.reduce((acc, i) => acc + i.price, 0),
-            currency: 'USD',
-            items: cart.map(i => ({ item_id: i.id, item_name: i.name, price: i.price }))
-        }
-    });
-    localStorage.removeItem('cart'); // Clear after success
+// 3. Complete Purchase Function
+function completePurchase(event) {
+    event.preventDefault();
+    // In a real app, you'd process payment here
+    localStorage.removeItem('luxury_cart');
+    window.location.href = 'success.html';
 }
+
+window.onload = updateCartCount;
