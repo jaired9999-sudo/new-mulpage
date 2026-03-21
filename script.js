@@ -6,63 +6,55 @@ const products = [
 
 let cart = JSON.parse(localStorage.getItem('luxury_cart')) || [];
 
-// 1. Add to Cart
+// Add Item
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     cart.push(product);
     localStorage.setItem('luxury_cart', JSON.stringify(cart));
-    
-    updateCartCount(); // Update the number in the nav
-    alert(`${product.name} added to collection.`);
+    updateUI();
 }
 
-// 2. Update Cart Count (The number in the Nav)
-function updateCartCount() {
-    const countElement = document.getElementById('cart-count');
-    if (countElement) {
-        countElement.innerText = cart.length;
+// Global UI Update
+function updateUI() {
+    // 1. Update Navigation Count
+    const counts = document.querySelectorAll('.cart-count');
+    counts.forEach(el => el.innerText = cart.length);
+
+    // 2. Update Hover Preview
+    const previewContainer = document.getElementById('preview-items');
+    if (previewContainer) {
+        if (cart.length === 0) {
+            previewContainer.innerHTML = "<p style='font-size:0.7rem;'>Your collection is empty.</p>";
+        } else {
+            previewContainer.innerHTML = cart.map(item => `
+                <div class="preview-item">
+                    <span>${item.name}</span>
+                    <span>$${item.price}</span>
+                </div>
+            `).join('');
+        }
+    }
+
+    // 3. Update Full Cart Page (if user is on cart.html)
+    const fullCartContainer = document.getElementById('full-cart-items');
+    const totalEl = document.getElementById('cart-total');
+    if (fullCartContainer) {
+        fullCartContainer.innerHTML = cart.map(item => `
+            <div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #eee;">
+                <span>${item.name}</span>
+                <span>$${item.price}</span>
+            </div>
+        `).join('');
+        const total = cart.reduce((sum, item) => sum + item.price, 0);
+        totalEl.innerText = total;
     }
 }
 
-// 3. Render Cart (The "Missing Link" for cart.html)
-function renderCart() {
-    const cartContainer = document.getElementById('cart-items');
-    const totalElement = document.getElementById('cart-total');
-    
-    if (!cartContainer) return; // Exit if we aren't on the cart page
-
-    if (cart.length === 0) {
-        cartContainer.innerHTML = "<p>Your collection is empty.</p>";
-        totalElement.innerText = "0";
-        return;
-    }
-
-    cartContainer.innerHTML = ""; // Clear placeholder
-    let total = 0;
-
-    cart.forEach((item, index) => {
-        total += item.price;
-        const itemDiv = document.createElement('div');
-        itemDiv.className = "cart-item";
-        itemDiv.style = "display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0;";
-        itemDiv.innerHTML = `
-            <span>${item.name}</span>
-            <span>$${item.price}</span>
-        `;
-        cartContainer.appendChild(itemDiv);
-    });
-
-    totalElement.innerText = total;
+function clearCart() {
+    localStorage.removeItem('luxury_cart');
+    cart = [];
+    updateUI();
 }
 
-// 4. Checkout Logic
-function beginCheckout() {
-    if (cart.length === 0) return alert("Your cart is empty.");
-    window.location.href = 'checkout.html';
-}
-
-// Run these on every page load
-window.onload = () => {
-    updateCartCount();
-    renderCart(); 
-};
+// Run on page load
+window.onload = updateUI;
