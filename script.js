@@ -1,60 +1,80 @@
-const products = [
-    { id: 1, name: "Midnight Suede Loafers", price: 450 },
-    { id: 2, name: "Gold-Trimmed Fountain Pen", price: 210 },
-    { id: 3, name: "Silk Monogram Scarf", price: 325 }
+// 1. Data Object (Our Inventory)
+const inventory = [
+    { id: 1, brand: "Roadster", name: "Cotton Casual Shirt", price: 899, cat: "Men" },
+    { id: 2, brand: "HRX", name: "Rapid-Dry Training Tee", price: 1299, cat: "Sport" },
+    { id: 3, brand: "Anouk", name: "Printed Pure Cotton Kurta", price: 1599, cat: "Women" },
+    { id: 4, brand: "H&M", name: "Relaxed Fit Hoodie", price: 2299, cat: "Men" }
 ];
 
-let cart = JSON.parse(localStorage.getItem('luxury_cart')) || [];
+let cart = JSON.parse(localStorage.getItem('myntra_cart')) || [];
 
-// Add Item
-function addToCart(productId) {
-    const product = products.find(p => p.id === productId);
-    cart.push(product);
-    localStorage.setItem('luxury_cart', JSON.stringify(cart));
-    updateUI();
+// 2. Navigation Functions
+function goToProduct(id) {
+    window.location.href = `product.html?id=${id}`;
 }
 
-// Global UI Update
-function updateUI() {
-    // 1. Update Navigation Count
-    const counts = document.querySelectorAll('.cart-count');
-    counts.forEach(el => el.innerText = cart.length);
+// 3. Add to Cart Logic
+function addToCart(id) {
+    const item = inventory.find(p => p.id === id);
+    cart.push(item);
+    localStorage.setItem('myntra_cart', JSON.stringify(cart));
+    updateCartIcon();
+    alert("Added to Bag");
+}
 
-    // 2. Update Hover Preview
-    const previewContainer = document.getElementById('preview-items');
-    if (previewContainer) {
-        if (cart.length === 0) {
-            previewContainer.innerHTML = "<p style='font-size:0.7rem;'>Your collection is empty.</p>";
-        } else {
-            previewContainer.innerHTML = cart.map(item => `
-                <div class="preview-item">
-                    <span>${item.name}</span>
-                    <span>$${item.price}</span>
-                </div>
-            `).join('');
-        }
+function updateCartIcon() {
+    const icons = document.querySelectorAll('.cart-count');
+    icons.forEach(i => i.innerText = cart.length);
+}
+
+// 4. Dynamic Page Loader (Runs on product.html)
+function loadProductDetails() {
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get('id'));
+    const product = inventory.find(p => p.id === id);
+
+    if (product) {
+        document.getElementById('p-brand').innerText = product.brand;
+        document.getElementById('p-name').innerText = product.name;
+        document.getElementById('p-price').innerText = "Rs. " + product.price;
+        document.getElementById('add-btn').onclick = () => addToCart(product.id);
+    }
+}
+
+// 5. Cart Renderer (Runs on cart.html)
+function renderBag() {
+    const container = document.getElementById('bag-items');
+    if (!container) return;
+
+    if (cart.length === 0) {
+        container.innerHTML = "<h3>Your bag is empty</h3>";
+        return;
     }
 
-    // 3. Update Full Cart Page (if user is on cart.html)
-    const fullCartContainer = document.getElementById('full-cart-items');
-    const totalEl = document.getElementById('cart-total');
-    if (fullCartContainer) {
-        fullCartContainer.innerHTML = cart.map(item => `
-            <div style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #eee;">
-                <span>${item.name}</span>
-                <span>$${item.price}</span>
+    container.innerHTML = cart.map((item, index) => `
+        <div style="display:flex; border:1px solid #eaeaec; margin-bottom:15px; padding:15px;">
+            <div style="flex-grow:1">
+                <p><b>${item.brand}</b></p>
+                <p>${item.name}</p>
+                <p>Rs. ${item.price}</p>
             </div>
-        `).join('');
-        const total = cart.reduce((sum, item) => sum + item.price, 0);
-        totalEl.innerText = total;
-    }
+            <button onclick="removeFromBag(${index})">Remove</button>
+        </div>
+    `).join('');
+    
+    const total = cart.reduce((s, i) => s + i.price, 0);
+    document.getElementById('total-amt').innerText = total;
 }
 
-function clearCart() {
-    localStorage.removeItem('luxury_cart');
-    cart = [];
-    updateUI();
+function removeFromBag(index) {
+    cart.splice(index, 1);
+    localStorage.setItem('myntra_cart', JSON.stringify(cart));
+    renderBag();
+    updateCartIcon();
 }
 
-// Run on page load
-window.onload = updateUI;
+window.onload = () => {
+    updateCartIcon();
+    if (window.location.pathname.includes('product.html')) loadProductDetails();
+    if (window.location.pathname.includes('cart.html')) renderBag();
+};
